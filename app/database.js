@@ -2,6 +2,73 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 var initialData = {
+  "users": {
+    "1": {
+      "_id": 1,
+      "fullName": "Someone",
+      "feed": 1
+    },
+    "2": {
+      "_id": 2,
+      "fullName": "Someone Else",
+      "feed": 2
+    },
+    "3": {
+      "_id": 3,
+      "fullName": "Another Person",
+      "feed": 3
+    },
+    "4": {
+      "_id": 4,
+      "fullName": "John Vilk",
+      "feed": 4
+    }
+  },
+  "feedItems": {
+    "1": {
+      "_id": 1,
+      "likeCounter": [
+      2, 3
+      ],
+      "type": "statusUpdate",
+      "contents": {
+        "author": 1,
+        "postDate": 1453668480000,
+        "location": "Austin, TX",
+        "contents": "ugh."
+      },
+      "comments": [
+      {
+        "author": 2,
+        "contents": "hope everything is ok!",
+        "postDate": 1453690800000
+      },
+      {
+        "author": 3,
+        "contents": "sending hugs your way",
+        "postDate": 1453690800000
+      }
+      ]
+    }
+  },
+  "feeds": {
+    "4": {
+      "_id": 4,
+      "contents": [1]
+    },
+    "3": {
+      "_id": 3,
+      "contents": []
+    },
+    "2": {
+      "_id": 2,
+      "contents": []
+    },
+    "1": {
+      "_id": 1,
+      "contents": []
+    }
+  }
 };
 
 var data = JSON.parse(localStorage.getItem('facebook_data'));
