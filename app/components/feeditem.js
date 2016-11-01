@@ -5,12 +5,27 @@ import Comment from './comment';
 
 export default class FeedItem extends React.Component {
 	render() {
+		var data = this.props.data;
+		var contents;
+		switch(data.type) {
+			case 'statusUpdate':
+				contents = (
+					<StatusUpdate
+						key={data._id}
+						author={data.contents.author}
+						postDate={data.contents.postDate}
+						location={data.contents.location}>
+						{data.contents.contents}
+					</StatusUpdate>
+					);
+				break;
+			default:
+				throw new Error('Unknown FeedItem: ' + data.type);
+		}
 		return (
 			<div className="fb-status-update panel panel-default">
 				<div className="panel-body">
-					<StatusUpdate author="Someone" postDate="Yesterday at 3:48pm" location="Austin, TX">
-					Ugh
-					</StatusUpdate>
+					{contents}
 					<hr/>
 					<div className="row">
 						<div className="col-md-12">
@@ -40,17 +55,23 @@ export default class FeedItem extends React.Component {
 				<div className="panel-footer">
 					<div className="row">
 						<div className="col-md-12">
-							<a href="#">13 people</a> like this
+							<a href="#">{data.likeCounter.length} people</a> like this
 						</div>
 					</div>
 					<hr />
 					<CommentThread>
-						<Comment author="Someone Else" postDate="20 hrs">
-							hope everything is ok!
-						</Comment>
-						<Comment author="Another Person" postDate="20 hrs">
-							sending hugs your way
-						</Comment>
+						{
+						data.comments.map((comment, i) => {	
+							return (
+								<Comment
+									key={i}
+									author={comment.author}
+									postDate={comment.postDate}>
+									{comment.contents}
+								</Comment>
+								);
+							})
+						}
 					</CommentThread>
 				</div>
 			</div>

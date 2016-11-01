@@ -15,7 +15,7 @@ function getFeedItemSync(feedItemId) {
 	feedItem.likeCounter = feedItem.likeCounter.map((id)=> readDocument('users', id));
 	feedItem.contents.author = readDocument('users', feedItem.contents.author);
 	feedItem.comments.forEach((comment) => {
-		comment.author = readDocument('user', comment.author);
+		comment.author = readDocument('users', comment.author);
 	});
 	return feedItem;
 }
