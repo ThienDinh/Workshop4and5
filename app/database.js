@@ -59,11 +59,13 @@ var initialData = {
       {
         "author": 2,
         "contents": "hope everything is ok!",
+        "likeCounter": [],
         "postDate": 1453690800000
       },
       {
         "author": 3,
         "contents": "sending hugs your way",
+        "likeCounter": [],
         "postDate": 1453690800000
       }
       ]

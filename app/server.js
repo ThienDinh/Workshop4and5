@@ -16,6 +16,7 @@ function getFeedItemSync(feedItemId) {
 	feedItem.contents.author = readDocument('users', feedItem.contents.author);
 	feedItem.comments.forEach((comment) => {
 		comment.author = readDocument('users', comment.author);
+		comment.likeCounter.map((id)=> readDocument('users', id));
 	});
 	return feedItem;
 }
@@ -77,7 +78,8 @@ export function postComment(feedItemId, author, contents, cb) {
 	feedItem.comments.push({
 		"author": author,
 		"contents": contents,
-		"postDate": new Date().getTime()
+		"postDate": new Date().getTime(),
+		"likeCounter": []
 	});
 	writeDocument('feedItems', feedItem);
 	// Return a resolved version of the feed item so React can
@@ -118,12 +120,36 @@ export function unlikeFeedItem(feedItemId, userId, cb) {
 	// anything if that is the case: the user already
 	// doesn't like the item.
 	if (userIndex !== -1) {
-	// 'splice' removes items from an array. This
-	// removes 1 element starting from userIndex.
-	feedItem.likeCounter.splice(userIndex, 1);
-	writeDocument('feedItems', feedItem);
+		// 'splice' removes items from an array. This
+		// removes 1 element starting from userIndex.
+		feedItem.likeCounter.splice(userIndex, 1);
+		writeDocument('feedItems', feedItem);
 	}
 	// Return a resolved version of the likeCounter
 	emulateServerReturn(feedItem.likeCounter.map((userId) =>
+	readDocument('users', userId)), cb);
+}
+
+// LikeComment function.
+export function likeComment(feedItemId, commentIdx, userId, cb) {
+	var feedItem = readDocument('feedItems', feedItemId);
+	feedItem.comments[commentIdx].likeCounter.push(userId);
+	writeDocument('feedItems', feedItem);
+	// Return updated comment.
+	emulateServerReturn(feedItem.comments[commentIdx].likeCounter.map((userId) =>
+	readDocument('users', userId)), cb);
+}
+
+// UnlikeComment function.
+export function unlikeComment(feedItemId, commentIdx, userId, cb) {
+	var feedItem = readDocument('feedItems', feedItemId);
+	var userIndex = feedItem.comments[commentIdx].likeCounter.indexOf(userId);
+	// Remove user from comment's like list.
+	if (userIndex !== -1) {
+		feedItem.comments[commentIdx].likeCounter.splice(userIndex, 1);
+		writeDocument('feedItems', feedItem);
+	}
+	// Return updated comment.
+	emulateServerReturn(feedItem.comments[commentIdx].likeCounter.map((userId) =>
 	readDocument('users', userId)), cb);
 }
